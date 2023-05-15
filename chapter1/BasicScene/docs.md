@@ -1,5 +1,3 @@
-### Basic Scene
-
 ## docs
 
 https://threejs.org/docs/index.html#api/en/renderers/WebGLRenderer

@@ -1,6 +1,6 @@
-### Basic Scene 
+### Basic Scene
 
-## docs 
+## docs
 
 https://threejs.org/docs/index.html#api/en/renderers/WebGLRenderer
 https://threejs.org/docs/index.html#api/en/scenes/Scene

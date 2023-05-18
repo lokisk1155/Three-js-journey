@@ -36,6 +36,7 @@ const tick = () => {
   const elapsedTime = clock.getElapsedTime();
 
   mesh.position.x = Math.sin(elapsedTime);
+  mesh.position.y = Math.sin(elapsedTime);
 
   renderer.render(scene, camera);
 

@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { FlyControls } from 'three/addons/controls/FlyControls.js';
 
 /**
  * Base
@@ -23,7 +24,8 @@ const mesh = new THREE.Mesh(
 scene.add(mesh);
 
 // Camera
-const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height);
+const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 1, 100);
+
 camera.position.x = 2;
 camera.position.y = 2;
 camera.position.z = 2;
@@ -36,6 +38,9 @@ const renderer = new THREE.WebGLRenderer({
 });
 renderer.setSize(sizes.width, sizes.height);
 
+const controls = new FlyControls(camera, renderer.domElement)
+controls.movementSpeed = 2
+
 // Animate
 const clock = new THREE.Clock();
 
@@ -47,6 +52,8 @@ const tick = () => {
 
   // Render
   renderer.render(scene, camera);
+
+  controls.update(0.05)
 
   // Call tick again on the next frame
   window.requestAnimationFrame(tick);

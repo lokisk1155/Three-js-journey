@@ -27,6 +27,7 @@ import {
   TextureLoader,
   MeshBasicMaterial,
   Object3D,
+  Vector3,
 } from "three";
 import { DragControls } from "three/examples/jsm/controls/DragControls";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
@@ -63,6 +64,7 @@ let log: THREE.Mesh;
 let log2: THREE.Mesh;
 let stars: THREE.Mesh;
 let anchor: THREE.Mesh;
+let cameraAnchor: THREE.Mesh;
 
 init();
 animate();
@@ -143,6 +145,8 @@ function init() {
 
     anchor = new Object3D();
     scene.add(anchor); // Add the anchor to the scene.
+    cameraAnchor = new Object3D();
+    scene.add(cameraAnchor); // Add the anchor to the scene.
 
     anchor.add(stars);
 
@@ -262,14 +266,14 @@ function animate() {
   requestAnimationFrame(animate);
 
   stats.update();
-
-  if (animation.enabled && animation.play) {
-    animations.rotate(cube, clock, Math.PI / 3);
-    animations.bounce(cube, clock, 1, 0.5, 0.5);
-  }
+  animations.rotate(camera, clock, Math.PI / 3);
 
   anchor.rotation.x += 0.001;
   anchor.rotation.y += 0.001;
+
+  cameraAnchor.rotation.y += 1;
+
+  camera.lookAt(new Vector3(0, 0, 0));
 
   if (fireParticles && fireLight) {
     // Animate fire particles

@@ -16,7 +16,7 @@ import {
   PointLightHelper,
   Scene,
   WebGLRenderer,
-  CylinderGeometry
+  CylinderGeometry,
 } from "three";
 import { DragControls } from "three/examples/jsm/controls/DragControls";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
@@ -96,46 +96,50 @@ function init() {
 
   let plane;
 
-// ===== 📦 OBJECTS =====
-{
+  // ===== 📦 OBJECTS =====
+  {
     const baseRadius = 22;
     const height = 1;
     const radialSegments = 4; // 4 segments for pyramid shape
     const cubeMaterial = new MeshStandardMaterial({
-        color: "silver",
-        metalness: 1.2,
-        roughness: 1.5,
+      color: "silver",
+      metalness: 1.2,
+      roughness: 1.5,
     });
 
     const layers = [];
 
     for (let i = 0; i < 22; i++) {
-        let layerGeometry = new CylinderGeometry(baseRadius - i, baseRadius - i - 1, height, radialSegments);
-        let layer = new Mesh(layerGeometry, cubeMaterial);
-        layer.position.y = i + height / 2;
-        layers.push(layer);
+      let layerGeometry = new CylinderGeometry(
+        baseRadius - i,
+        baseRadius - i - 1,
+        height,
+        radialSegments
+      );
+      let layer = new Mesh(layerGeometry, cubeMaterial);
+      layer.position.y = i + height / 2;
+      layers.push(layer);
     }
 
     const planeGeometry = new PlaneGeometry(3, 3);
     const planeMaterial = new MeshLambertMaterial({
-        color: "gray",
-        emissive: "teal",
-        emissiveIntensity: 0.2,
-        side: 2,
-        transparent: true,
-        opacity: 0.4,
+      color: "gray",
+      emissive: "teal",
+      emissiveIntensity: 0.2,
+      side: 2,
+      transparent: true,
+      opacity: 0.4,
     });
     plane = new Mesh(planeGeometry, planeMaterial);
     plane.rotateX(Math.PI / 2);
     plane.receiveShadow = true;
 
     layers.forEach((layer) => {
-        scene.add(layer);
+      scene.add(layer);
     });
-    
-    scene.add(plane);
-}
 
+    scene.add(plane);
+  }
 
   // ===== 🎥 CAMERA =====
   {

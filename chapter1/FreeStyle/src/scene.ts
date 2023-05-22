@@ -189,18 +189,23 @@ function init() {
     const particleGeometry = new SphereGeometry(1, 32, 32);
     const particleMaterial = new PointsMaterial({
       color: 0xff4500,
-      size: 0.05,
+      size: 0.2,
       blending: AdditiveBlending,
       transparent: true,
+      opacity: 0.8,
+      depthWrite: false,
     });
+
     fireParticles = new Points(particleGeometry, particleMaterial);
     fireParticles.position.y = 21;
     scene.add(fireParticles);
 
     // Create fire light
-    fireLight = new PointLight(0xff4500, 1, 100);
-    fireLight.position.y = 21;
+    // Create fire light
+    fireLight = new PointLight(0xff4500, 1, 65);
+    fireLight.position.set(0, 21, 0);
     scene.add(fireLight);
+
     scene.add(plane);
   }
 
@@ -212,7 +217,7 @@ function init() {
       0.1,
       100
     );
-    camera.position.set(2, 2, 5);
+    camera.position.set(15, 50, 50);
   }
 
   // ===== 🕹️ CONTROLS =====
@@ -283,7 +288,6 @@ function animate() {
     fireParticles.geometry.attributes.position.needsUpdate = true;
 
     // Animate fire light to flicker
-    fireLight.intensity = 1 + Math.random() * 0.5;
 
     if (resizeRendererToDisplaySize(renderer)) {
       const canvas = renderer.domElement;

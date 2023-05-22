@@ -1,10 +1,11 @@
-### What is Geometry 
+### What is Geometry
+
 - geometries are composed of vertices
-- you can use geomatries to form particals 
+- you can use geomatries to form particals
 - all geometry classes inherit from the buffer geometry class
 
+### Create a Simple Square using verticies
 
-### Create a Simple Square using verticies  
 ```
 const vertices = new Float32Array( [
 	-1.0, -1.0,  1.0, // v0
@@ -19,6 +20,7 @@ geometry.setAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
 ```
 
 ### The BoxGeometry has 6 parameters:
+
 1. width: The size on the x axis
 2. height: The size on the y axis
 3. depth: The size on the z axis
@@ -26,7 +28,8 @@ geometry.setAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
 5. heightSegments: How many subdivisions in the y axis
 6. depthSegments: How many subdivisions in the z axis
 
-### Creating your own buffer Geometry 
+### Creating your own buffer Geometry
+
 ```
 // Create an empty BufferGeometry
 const geometry = new THREE.BufferGeometry()
@@ -43,8 +46,10 @@ const positionsAttribute = new THREE.BufferAttribute(positionsArray, 3)
 geometry.setAttribute('position', positionsAttribute)
 ```
 
-### Create random Triangles 
+### Create random Triangles
+
 - Create 50 triangles (450 values)
+
 ```
 const count = 50
 const positionsArray = new Float32Array(count * 3 * 3)

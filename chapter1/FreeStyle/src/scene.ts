@@ -17,6 +17,15 @@ import {
   Scene,
   WebGLRenderer,
   CylinderGeometry,
+  SphereGeometry,
+  PointsMaterial,
+  AdditiveBlending,
+  Points,
+  Float32BufferAttribute,
+  MathUtils,
+  BufferGeometry,
+  TextureLoader,
+  MeshBasicMaterial,
 } from "three";
 import { DragControls } from "three/examples/jsm/controls/DragControls";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
@@ -45,6 +54,12 @@ let stats: Stats;
 let gui: GUI;
 
 const animation = { enabled: false, play: true };
+
+let plane: THREE.Mesh;
+let fireLight: THREE.PointLight;
+let fireParticles: THREE.Points;
+let log: THREE.Mesh;
+let log2: THREE.Mesh;
 
 init();
 animate();
@@ -94,10 +109,37 @@ function init() {
     scene.add(pointLight);
   }
 
-  let plane;
-
   // ===== 📦 OBJECTS =====
   {
+    const starGeometry = new BufferGeometry();
+    const starMaterial = new PointsMaterial({
+      color: 0xffffff,
+    });
+
+    const starVertices = [];
+
+    for (let i = 0; i < 1000000; i++) {
+      const x = MathUtils.randFloatSpread(2000); // spread in a range of -2000 to 2000 on the x-axis
+      const y = MathUtils.randFloatSpread(2000); // spread in a range of -2000 to 2000 on the y-axis
+      const z = MathUtils.randFloatSpread(2000); // spread in a range of -2000 to 2000 on the z-axis
+
+      starVertices.push(x, y, z);
+    }
+
+    starGeometry.setAttribute(
+      "position",
+      new Float32BufferAttribute(starVertices, 3)
+    );
+
+    const stars = new Points(starGeometry, starMaterial);
+    stars.position.set(
+      Math.random() * 500 - 250,
+      Math.random() * 500 - 250,
+      Math.random() * 500 - 250
+    );
+
+    scene.add(stars);
+
     const baseRadius = 22;
     const height = 1;
     const radialSegments = 4; // 4 segments for pyramid shape
@@ -137,7 +179,22 @@ function init() {
     layers.forEach((layer) => {
       scene.add(layer);
     });
+    // Create fire particles
+    const particleGeometry = new SphereGeometry(1, 32, 32);
+    const particleMaterial = new PointsMaterial({
+      color: 0xff4500,
+      size: 0.05,
+      blending: AdditiveBlending,
+      transparent: true,
+    });
+    fireParticles = new Points(particleGeometry, particleMaterial);
+    fireParticles.position.y = 21;
+    scene.add(fireParticles);
 
+    // Create fire light
+    fireLight = new PointLight(0xff4500, 1, 100);
+    fireLight.position.y = 21;
+    scene.add(fireLight);
     scene.add(plane);
   }
 
@@ -157,7 +214,7 @@ function init() {
     cameraControls = new OrbitControls(camera, canvas);
     cameraControls.target = plane.position.clone();
     cameraControls.enableDamping = true;
-    cameraControls.autoRotate = true;
+    cameraControls.autoRotate = false;
     cameraControls.update();
 
     // Full screen
@@ -190,7 +247,6 @@ function init() {
     document.body.appendChild(stats.dom);
   }
 }
-
 function animate() {
   requestAnimationFrame(animate);
 
@@ -201,10 +257,30 @@ function animate() {
     animations.bounce(cube, clock, 1, 0.5, 0.5);
   }
 
-  if (resizeRendererToDisplaySize(renderer)) {
-    const canvas = renderer.domElement;
-    camera.aspect = canvas.clientWidth / canvas.clientHeight;
-    camera.updateProjectionMatrix();
+  if (fireParticles && fireLight) {
+    // Animate fire particles
+    // Assuming your geometry is an instance of THREE.BufferGeometry:
+    // Assuming your geometry is an instance of THREE.BufferGeometry:
+    let positions = fireParticles.geometry.attributes.position
+      .array as Float32Array;
+    let i, j, y;
+    for (i = 0, j = 1; i < positions.length; i += 3, j += 3) {
+      y = positions[j] + Math.random() * 0.01;
+      if (y > 2) {
+        y = 0;
+      }
+      positions[j] = y;
+    }
+    fireParticles.geometry.attributes.position.needsUpdate = true;
+
+    // Animate fire light to flicker
+    fireLight.intensity = 1 + Math.random() * 0.5;
+
+    if (resizeRendererToDisplaySize(renderer)) {
+      const canvas = renderer.domElement;
+      camera.aspect = canvas.clientWidth / canvas.clientHeight;
+      camera.updateProjectionMatrix();
+    }
   }
 
   cameraControls.update();

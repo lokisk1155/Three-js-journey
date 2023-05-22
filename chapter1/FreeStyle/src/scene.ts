@@ -26,6 +26,7 @@ import {
   BufferGeometry,
   TextureLoader,
   MeshBasicMaterial,
+  Object3D,
 } from "three";
 import { DragControls } from "three/examples/jsm/controls/DragControls";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
@@ -60,6 +61,8 @@ let fireLight: THREE.PointLight;
 let fireParticles: THREE.Points;
 let log: THREE.Mesh;
 let log2: THREE.Mesh;
+let stars: THREE.Mesh;
+let anchor: THREE.Mesh;
 
 init();
 animate();
@@ -131,14 +134,17 @@ function init() {
       new Float32BufferAttribute(starVertices, 3)
     );
 
-    const stars = new Points(starGeometry, starMaterial);
+    stars = new Points(starGeometry, starMaterial);
     stars.position.set(
       Math.random() * 500 - 250,
       Math.random() * 500 - 250,
       Math.random() * 500 - 250
     );
 
-    scene.add(stars);
+    anchor = new Object3D();
+    scene.add(anchor); // Add the anchor to the scene.
+
+    anchor.add(stars);
 
     const baseRadius = 22;
     const height = 1;
@@ -256,6 +262,9 @@ function animate() {
     animations.rotate(cube, clock, Math.PI / 3);
     animations.bounce(cube, clock, 1, 0.5, 0.5);
   }
+
+  anchor.rotation.x += 0.001;
+  anchor.rotation.y += 0.001;
 
   if (fireParticles && fireLight) {
     // Animate fire particles

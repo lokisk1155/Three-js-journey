@@ -1,8 +1,6 @@
-import GUI from "lil-gui";
 import {
   AmbientLight,
   AxesHelper,
-  BoxGeometry,
   Clock,
   GridHelper,
   LoadingManager,
@@ -24,12 +22,8 @@ import {
   Float32BufferAttribute,
   MathUtils,
   BufferGeometry,
-  TextureLoader,
-  MeshBasicMaterial,
-  Object3D,
   Vector3,
 } from "three";
-import { DragControls } from "three/examples/jsm/controls/DragControls";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import Stats from "three/examples/jsm/libs/stats.module";
 import * as animations from "./helpers/animations";
@@ -45,26 +39,18 @@ let scene: Scene;
 let loadingManager: LoadingManager;
 let ambientLight: AmbientLight;
 let pointLight: PointLight;
-let cube: Mesh;
 let camera: PerspectiveCamera;
 let cameraControls: OrbitControls;
-let dragControls: DragControls;
 let axesHelper: AxesHelper;
 let pointLightHelper: PointLightHelper;
 let clock: Clock;
 let stats: Stats;
-let gui: GUI;
-
-const animation = { enabled: false, play: true };
-
 let plane: THREE.Mesh;
 let fireLight: THREE.PointLight;
 let fireParticles: THREE.Points;
-let log: THREE.Mesh;
-let log2: THREE.Mesh;
-let stars: THREE.Mesh;
-let anchor: THREE.Mesh;
-let cameraAnchor: THREE.Mesh;
+let stars: THREE.Points;
+let anchor: THREE.Points;
+let cameraAnchor: THREE.Points;
 
 init();
 animate();
@@ -123,7 +109,7 @@ function init() {
 
     const starVertices = [];
 
-    for (let i = 0; i < 1000000; i++) {
+    for (let i = 0; i < 100000; i++) {
       const x = MathUtils.randFloatSpread(2000); // spread in a range of -2000 to 2000 on the x-axis
       const y = MathUtils.randFloatSpread(2000); // spread in a range of -2000 to 2000 on the y-axis
       const z = MathUtils.randFloatSpread(2000); // spread in a range of -2000 to 2000 on the z-axis
@@ -136,6 +122,7 @@ function init() {
       new Float32BufferAttribute(starVertices, 3)
     );
 
+    // create stars
     stars = new Points(starGeometry, starMaterial);
     stars.position.set(
       Math.random() * 500 - 250,
@@ -143,11 +130,15 @@ function init() {
       Math.random() * 500 - 250
     );
 
-    anchor = new Object3D();
-    scene.add(anchor); // Add the anchor to the scene.
-    cameraAnchor = new Object3D();
+    // anchor for stars
+    anchor = new Points(starGeometry, starMaterial);
+    scene.add(anchor);
+
+    // anchor for camera
+    cameraAnchor = new Points(starGeometry, starMaterial);
     scene.add(cameraAnchor); // Add the anchor to the scene.
 
+    // attach stars to anchor
     anchor.add(stars);
 
     const baseRadius = 22;
@@ -161,6 +152,7 @@ function init() {
 
     const layers = [];
 
+    // build em up
     for (let i = 0; i < 22; i++) {
       let layerGeometry = new CylinderGeometry(
         baseRadius - i,
@@ -172,11 +164,15 @@ function init() {
       layer.position.y = i + height / 2;
       layers.push(layer);
     }
+    let temp1 = new CylinderGeometry(23, 22, height, radialSegments);
+    let temp2 = new Mesh(temp1, cubeMaterial);
+    temp2.position.y = -0.5;
+    layers.push(temp2);
 
     const planeGeometry = new PlaneGeometry(3, 3);
     const planeMaterial = new MeshLambertMaterial({
-      color: "gray",
-      emissive: "teal",
+      color: "black",
+      emissive: "black",
       emissiveIntensity: 0.2,
       side: 2,
       transparent: true,
@@ -204,7 +200,6 @@ function init() {
     fireParticles.position.y = 21;
     scene.add(fireParticles);
 
-    // Create fire light
     // Create fire light
     fireLight = new PointLight(0xff4500, 1, 65);
     fireLight.position.set(0, 21, 0);
@@ -267,18 +262,13 @@ function animate() {
 
   stats.update();
   animations.rotate(camera, clock, Math.PI / 3);
-
-  anchor.rotation.x += 0.001;
-  anchor.rotation.y += 0.001;
-
-  cameraAnchor.rotation.y += 1;
-
+  anchor.rotation.x += 0.000001;
+  anchor.rotation.y += 0.00001;
+  cameraAnchor.rotation.y += 0.01;
   camera.lookAt(new Vector3(0, 0, 0));
 
   if (fireParticles && fireLight) {
     // Animate fire particles
-    // Assuming your geometry is an instance of THREE.BufferGeometry:
-    // Assuming your geometry is an instance of THREE.BufferGeometry:
     let positions = fireParticles.geometry.attributes.position
       .array as Float32Array;
     let i, j, y;

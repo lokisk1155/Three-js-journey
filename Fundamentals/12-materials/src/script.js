@@ -11,8 +11,8 @@ const canvas = document.querySelector("canvas.webgl");
 const scene = new THREE.Scene();
 
 // const material = new THREE.MeshBasicMaterial();
-const material = new THREE.MeshNormalMaterial()
-material.wireframe = true 
+const material = new THREE.MeshNormalMaterial();
+material.wireframe = true;
 
 const sphere = new THREE.Mesh(new THREE.SphereGeometry(0.5, 16, 16), material);
 sphere.position.x = -1.5;
@@ -85,14 +85,14 @@ const clock = new THREE.Clock();
 const tick = () => {
   const elapsedTime = clock.getElapsedTime();
 
-  // auto rotate objects 
-  sphere.rotation.y = 0.1 * elapsedTime
-  plane.rotation.y = 0.1 * elapsedTime
-  torus.rotation.y = 0.1 * elapsedTime
+  // auto rotate objects
+  sphere.rotation.y = 0.1 * elapsedTime;
+  plane.rotation.y = 0.1 * elapsedTime;
+  torus.rotation.y = 0.1 * elapsedTime;
 
-  sphere.rotation.x = 0.15 * elapsedTime
-  plane.rotation.x = 0.15 * elapsedTime
-  torus.rotation.x = 0.15 * elapsedTime
+  sphere.rotation.x = 0.15 * elapsedTime;
+  plane.rotation.x = 0.15 * elapsedTime;
+  torus.rotation.x = 0.15 * elapsedTime;
 
   // Update controls
   controls.update();

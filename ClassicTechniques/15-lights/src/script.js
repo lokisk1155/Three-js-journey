@@ -17,10 +17,25 @@ const scene = new THREE.Scene();
 /**
  * Lights
  */
+// light from ground 
 const ambientLight = new THREE.AmbientLight();
 ambientLight.color = new THREE.Color(0xffffff)
 ambientLight.intensity = 0.5
 scene.add(ambientLight);
+
+// const directionalLight = new THREE.DirectionalLight(0x00fffc, 0.3)
+// scene.add(directionalLight)
+
+// torch light in center
+// const pointLight = new THREE.PointLight(0xff9000, 5.5)
+// scene.add(pointLight)
+
+const rectAreaLight = new THREE.RectAreaLight(0x4e00ff, -4, 2, 2)
+scene.add(rectAreaLight)
+
+// light from sky
+// const hemisphereLight = new THREE.HemisphereLight(0xff0000, 0x0000ff, 0.3)
+// scene.add(hemisphereLight)
 
 // const pointLight = new THREE.PointLight(0xffffff, 0.5);
 // pointLight.position.x = 2;

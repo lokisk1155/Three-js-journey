@@ -88,13 +88,12 @@ scene.add(floor);
  * Lights
  */
 // Ambient light
-const ambientLight = new THREE.AmbientLight("#ffffff", 0.5);
+const ambientLight = new THREE.AmbientLight('#b9d5ff', 0.12)
 gui.add(ambientLight, "intensity").min(0).max(1).step(0.001);
 scene.add(ambientLight);
 
 // Directional light
-const moonLight = new THREE.DirectionalLight("#ffffff", 0.5);
-moonLight.position.set(4, 5, -2);
+const moonLight = new THREE.DirectionalLight('#b9d5ff', 0.12)
 gui.add(moonLight, "intensity").min(0).max(1).step(0.001);
 gui.add(moonLight.position, "x").min(-5).max(5).step(0.001);
 gui.add(moonLight.position, "y").min(-5).max(5).step(0.001);

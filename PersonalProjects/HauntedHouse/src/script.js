@@ -48,6 +48,33 @@ door.position.y = 1;
 door.position.z = 4 + 0.01;
 house.add(door);
 
+// Graves
+const graves = new THREE.Group();
+scene.add(graves);
+
+const graveGeometry = new THREE.BoxGeometry(0.6, 0.8, 0.2);
+const graveMaterial = new THREE.MeshStandardMaterial({ color: "#b2b6b1" });
+
+for (let i = 0; i < 40; i++) {
+  const angle = Math.random() * Math.PI * 2; // Random angle
+  const radius = 5 + Math.random() * 20; // Random radius
+  const x = Math.cos(angle) * radius; // Get the x position using cosinus
+  const z = Math.sin(angle) * radius; // Get the z position using sinus
+
+  // Create the mesh
+  const grave = new THREE.Mesh(graveGeometry, graveMaterial);
+
+  // Position
+  grave.position.set(x, 0.3, z);
+
+  // Rotation
+  grave.rotation.z = (Math.random() - 0.5) * 0.4;
+  grave.rotation.y = (Math.random() - 0.5) * 0.4;
+
+  // Add to the graves container
+  graves.add(grave);
+}
+
 // Floor
 const floor = new THREE.Mesh(
   new THREE.PlaneGeometry(50, 50),

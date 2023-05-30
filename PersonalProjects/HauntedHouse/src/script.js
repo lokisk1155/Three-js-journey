@@ -38,10 +38,14 @@ const bricksRoughnessTexture = textureLoader.load(
   "/textures/bricks/roughness.jpg"
 );
 // grass
-const grassColorTexture = textureLoader.load('/textures/grass/color.jpg')
-const grassAmbientOcclusionTexture = textureLoader.load('/textures/grass/ambientOcclusion.jpg')
-const grassNormalTexture = textureLoader.load('/textures/grass/normal.jpg')
-const grassRoughnessTexture = textureLoader.load('/textures/grass/roughness.jpg')
+const grassColorTexture = textureLoader.load("/textures/grass/color.jpg");
+const grassAmbientOcclusionTexture = textureLoader.load(
+  "/textures/grass/ambientOcclusion.jpg"
+);
+const grassNormalTexture = textureLoader.load("/textures/grass/normal.jpg");
+const grassRoughnessTexture = textureLoader.load(
+  "/textures/grass/roughness.jpg"
+);
 
 // House
 const house = new THREE.Group();
@@ -122,6 +126,25 @@ for (let i = 0; i < 40; i++) {
   graves.add(grave);
 }
 
+// Ghosts
+const ghost1 = new THREE.PointLight("#ff00ff", 15, 15);
+scene.add(ghost1);
+
+const ghost2 = new THREE.PointLight("#00ffff", 15, 15);
+scene.add(ghost2);
+
+const ghost3 = new THREE.PointLight("#ffff00", 15, 15);
+scene.add(ghost3);
+
+const ghost4 = new THREE.PointLight("#ff0000", 15, 15);
+scene.add(ghost4);
+
+const ghost5 = new THREE.PointLight("#00ff00", 15, 15);
+scene.add(ghost5);
+
+const ghost6 = new THREE.PointLight("#0000ff", 15, 15);
+scene.add(ghost6);
+
 // Floor
 const floor = new THREE.Mesh(
   new THREE.PlaneGeometry(50, 50),
@@ -129,22 +152,25 @@ const floor = new THREE.Mesh(
     map: grassColorTexture,
     aoMap: grassAmbientOcclusionTexture,
     normalMap: grassNormalTexture,
-    roughnessMap: grassRoughnessTexture
-})
-)
-grassColorTexture.repeat.set(18, 18)
-grassAmbientOcclusionTexture.repeat.set(18, 18)
-grassNormalTexture.repeat.set(18, 18)
-grassRoughnessTexture.repeat.set(18, 18)
-grassColorTexture.wrapS = THREE.RepeatWrapping
-grassAmbientOcclusionTexture.wrapS = THREE.RepeatWrapping
-grassNormalTexture.wrapS = THREE.RepeatWrapping
-grassRoughnessTexture.wrapS = THREE.RepeatWrapping
-grassColorTexture.wrapT = THREE.RepeatWrapping
-grassAmbientOcclusionTexture.wrapT = THREE.RepeatWrapping
-grassNormalTexture.wrapT = THREE.RepeatWrapping
-grassRoughnessTexture.wrapT = THREE.RepeatWrapping
-floor.geometry.setAttribute('uv2', new THREE.Float32BufferAttribute(floor.geometry.attributes.uv.array, 2))
+    roughnessMap: grassRoughnessTexture,
+  })
+);
+grassColorTexture.repeat.set(18, 18);
+grassAmbientOcclusionTexture.repeat.set(18, 18);
+grassNormalTexture.repeat.set(18, 18);
+grassRoughnessTexture.repeat.set(18, 18);
+grassColorTexture.wrapS = THREE.RepeatWrapping;
+grassAmbientOcclusionTexture.wrapS = THREE.RepeatWrapping;
+grassNormalTexture.wrapS = THREE.RepeatWrapping;
+grassRoughnessTexture.wrapS = THREE.RepeatWrapping;
+grassColorTexture.wrapT = THREE.RepeatWrapping;
+grassAmbientOcclusionTexture.wrapT = THREE.RepeatWrapping;
+grassNormalTexture.wrapT = THREE.RepeatWrapping;
+grassRoughnessTexture.wrapT = THREE.RepeatWrapping;
+floor.geometry.setAttribute(
+  "uv2",
+  new THREE.Float32BufferAttribute(floor.geometry.attributes.uv.array, 2)
+);
 floor.rotation.x = -Math.PI * 0.5;
 floor.position.y = 0;
 scene.add(floor);
@@ -234,6 +260,41 @@ const clock = new THREE.Clock();
 
 const tick = () => {
   const elapsedTime = clock.getElapsedTime();
+
+  // Ghosts
+  const ghost1Angle = elapsedTime * 0.5;
+  ghost1.position.x = Math.cos(ghost1Angle) * 4;
+  ghost1.position.z = Math.sin(ghost1Angle) * 4;
+  ghost1.position.y = Math.sin(elapsedTime * 3);
+
+  const ghost2Angle = -elapsedTime * 0.32;
+  ghost2.position.x = Math.cos(ghost2Angle) * 5;
+  ghost2.position.z = Math.sin(ghost2Angle) * 5;
+  ghost2.position.y = Math.sin(elapsedTime * 4) + Math.sin(elapsedTime * 2.5);
+
+  const ghost3Angle = -elapsedTime * 0.18;
+  ghost3.position.x =
+    Math.cos(ghost3Angle) * (7 + Math.sin(elapsedTime * 0.32));
+  ghost3.position.z = Math.sin(ghost3Angle) * (7 + Math.sin(elapsedTime * 0.5));
+  ghost3.position.y = Math.sin(elapsedTime * 4) + Math.sin(elapsedTime * 2.5);
+
+  const ghost4Angle = -elapsedTime * 0.18;
+  ghost4.position.x =
+    Math.cos(ghost4Angle) * (7 + Math.sin(elapsedTime * 0.32));
+  ghost4.position.z = Math.sin(ghost4Angle) * (7 + Math.sin(elapsedTime * 0.5));
+  ghost4.position.y = Math.sin(elapsedTime * 4) + Math.sin(elapsedTime * 2.5);
+
+  const ghost5Angle = -elapsedTime * 0.18;
+  ghost5.position.x =
+    Math.cos(ghost5Angle) * (7 + Math.sin(elapsedTime * 0.32));
+  ghost5.position.z = Math.sin(ghost5Angle) * (7 + Math.sin(elapsedTime * 0.5));
+  ghost5.position.y = Math.sin(elapsedTime * 4) + Math.sin(elapsedTime * 2.5);
+
+  const ghost6Angle = -elapsedTime * 0.18;
+  ghost6.position.x =
+    Math.cos(ghost6Angle) * (7 + Math.sin(elapsedTime * 0.32));
+  ghost6.position.z = Math.sin(ghost6Angle) * (7 + Math.sin(elapsedTime * 0.5));
+  ghost6.position.y = Math.sin(elapsedTime * 4) + Math.sin(elapsedTime * 2.5);
 
   // Update controls
   controls.update();

@@ -114,6 +114,7 @@ for (let i = 0; i < 40; i++) {
 
   // Create the mesh
   const grave = new THREE.Mesh(graveGeometry, graveMaterial);
+  grave.castShadow = true
 
   // Position
   grave.position.set(x, 0.3, z);
@@ -173,6 +174,7 @@ floor.geometry.setAttribute(
 );
 floor.rotation.x = -Math.PI * 0.5;
 floor.position.y = 0;
+floor.receiveShadow = true
 scene.add(floor);
 
 /**
@@ -249,9 +251,11 @@ controls.enableDamping = true;
 const renderer = new THREE.WebGLRenderer({
   canvas: canvas,
 });
+renderer.shadowMap.enabled = true
 renderer.setSize(sizes.width, sizes.height);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setClearColor("#262837");
+
 
 /**
  * Animate

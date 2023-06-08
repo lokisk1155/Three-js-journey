@@ -1,12 +1,27 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import * as dat from "lil-gui";
+import { PositionalAudio } from "three";
 
 /**
  * Base
  */
 // Debug
 const gui = new dat.GUI();
+
+// audio
+
+const audioListener = new THREE.AudioListener();
+
+const audioLoader = new THREE.AudioLoader();
+
+const sound = new PositionalAudio(audioListener);
+
+audioLoader.load("./song.mp3 ", function (buffer) {
+  sound.setBuffer(buffer);
+  sound.setRefDistance(20);
+  sound.play();
+});
 
 // Canvas
 const canvas = document.querySelector("canvas.webgl");
@@ -50,6 +65,7 @@ const grassRoughnessTexture = textureLoader.load(
 // House
 const house = new THREE.Group();
 scene.add(house);
+house.add(sound);
 
 const walls = new THREE.Mesh(
   new THREE.BoxGeometry(8, 4.5, 8),
@@ -114,7 +130,7 @@ for (let i = 0; i < 40; i++) {
 
   // Create the mesh
   const grave = new THREE.Mesh(graveGeometry, graveMaterial);
-  grave.castShadow = true
+  grave.castShadow = true;
 
   // Position
   grave.position.set(x, 0.3, z);
@@ -174,7 +190,7 @@ floor.geometry.setAttribute(
 );
 floor.rotation.x = -Math.PI * 0.5;
 floor.position.y = 0;
-floor.receiveShadow = true
+floor.receiveShadow = true;
 scene.add(floor);
 
 /**
@@ -251,11 +267,10 @@ controls.enableDamping = true;
 const renderer = new THREE.WebGLRenderer({
   canvas: canvas,
 });
-renderer.shadowMap.enabled = true
+renderer.shadowMap.enabled = true;
 renderer.setSize(sizes.width, sizes.height);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setClearColor("#262837");
-
 
 /**
  * Animate

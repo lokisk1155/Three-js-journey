@@ -172,7 +172,7 @@ const floor = new THREE.Mesh(
     roughnessMap: grassRoughnessTexture,
   })
 );
-grassColorTexture.repeat.set(18, 18);
+grassColorTexture.repeat.set(12, 12);
 grassAmbientOcclusionTexture.repeat.set(18, 18);
 grassNormalTexture.repeat.set(18, 18);
 grassRoughnessTexture.repeat.set(18, 18);
@@ -202,7 +202,7 @@ gui.add(ambientLight, "intensity").min(0).max(1).step(0.001);
 scene.add(ambientLight);
 
 // Directional light
-const moonLight = new THREE.DirectionalLight("#b9d5ff", 0.12);
+const moonLight = new THREE.DirectionalLight("#b9d5ff", 0.80);
 gui.add(moonLight, "intensity").min(0).max(1).step(0.001);
 gui.add(moonLight.position, "x").min(-5).max(5).step(0.001);
 gui.add(moonLight.position, "y").min(-5).max(5).step(0.001);

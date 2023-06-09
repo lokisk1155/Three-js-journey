@@ -29,6 +29,22 @@ const canvas = document.querySelector("canvas.webgl");
 // Scene
 const scene = new THREE.Scene();
 
+// audio
+
+const audioListener = new THREE.AudioListener();
+
+const audioLoader = new THREE.AudioLoader();
+
+const sound = new PositionalAudio(audioListener);
+
+audioLoader.load("./song.mp3 ", function (buffer) {
+  sound.setBuffer(buffer);
+  sound.setRefDistance(20);
+  sound.play();
+});
+
+scene.add(sound);
+
 /**
  * Textures
  */
@@ -122,6 +138,8 @@ scene.add(graves);
 const graveGeometry = new THREE.BoxGeometry(0.6, 0.8, 0.2);
 const graveMaterial = new THREE.MeshStandardMaterial({ color: "#b2b6b1" });
 
+let toggle = false;
+let colorToggle = false;
 for (let i = 0; i < 40; i++) {
   const angle = Math.random() * Math.PI * 2; // Random angle
   const radius = 5 + Math.random() * 20; // Random radius
@@ -140,6 +158,18 @@ for (let i = 0; i < 40; i++) {
   grave.rotation.y = (Math.random() - 0.5) * 0.4;
 
   // Add to the graves container
+
+  if (i % 2 === 0) {
+    if (toggle) {
+      const newGhostColor = colorToggle ? "#0000ff" : "#ff0000";
+      colorToggle = !colorToggle;
+      const newGhost = new THREE.PointLight(newGhostColor, 15, 15);
+      grave.add(newGhost);
+      toggle = false;
+    } else {
+      toggle = true;
+    }
+  }
   graves.add(grave);
 }
 
@@ -153,15 +183,6 @@ scene.add(ghost2);
 const ghost3 = new THREE.PointLight("#ffff00", 15, 15);
 scene.add(ghost3);
 
-const ghost4 = new THREE.PointLight("#ff0000", 15, 15);
-scene.add(ghost4);
-
-const ghost5 = new THREE.PointLight("#00ff00", 15, 15);
-scene.add(ghost5);
-
-const ghost6 = new THREE.PointLight("#0000ff", 15, 15);
-scene.add(ghost6);
-
 // Floor
 const floor = new THREE.Mesh(
   new THREE.PlaneGeometry(50, 50),
@@ -172,7 +193,7 @@ const floor = new THREE.Mesh(
     roughnessMap: grassRoughnessTexture,
   })
 );
-grassColorTexture.repeat.set(18, 18);
+grassColorTexture.repeat.set(12, 12);
 grassAmbientOcclusionTexture.repeat.set(18, 18);
 grassNormalTexture.repeat.set(18, 18);
 grassRoughnessTexture.repeat.set(18, 18);
@@ -296,24 +317,6 @@ const tick = () => {
     Math.cos(ghost3Angle) * (7 + Math.sin(elapsedTime * 0.32));
   ghost3.position.z = Math.sin(ghost3Angle) * (7 + Math.sin(elapsedTime * 0.5));
   ghost3.position.y = Math.sin(elapsedTime * 4) + Math.sin(elapsedTime * 2.5);
-
-  const ghost4Angle = -elapsedTime * 0.18;
-  ghost4.position.x =
-    Math.cos(ghost4Angle) * (7 + Math.sin(elapsedTime * 0.32));
-  ghost4.position.z = Math.sin(ghost4Angle) * (7 + Math.sin(elapsedTime * 0.5));
-  ghost4.position.y = Math.sin(elapsedTime * 4) + Math.sin(elapsedTime * 2.5);
-
-  const ghost5Angle = -elapsedTime * 0.18;
-  ghost5.position.x =
-    Math.cos(ghost5Angle) * (7 + Math.sin(elapsedTime * 0.32));
-  ghost5.position.z = Math.sin(ghost5Angle) * (7 + Math.sin(elapsedTime * 0.5));
-  ghost5.position.y = Math.sin(elapsedTime * 4) + Math.sin(elapsedTime * 2.5);
-
-  const ghost6Angle = -elapsedTime * 0.18;
-  ghost6.position.x =
-    Math.cos(ghost6Angle) * (7 + Math.sin(elapsedTime * 0.32));
-  ghost6.position.z = Math.sin(ghost6Angle) * (7 + Math.sin(elapsedTime * 0.5));
-  ghost6.position.y = Math.sin(elapsedTime * 4) + Math.sin(elapsedTime * 2.5);
 
   // Update controls
   controls.update();

@@ -104,36 +104,33 @@ const battlementMaterial = new THREE.MeshStandardMaterial({
 const battlements = [];
 
 // Crenellations
-const merlonGeometry = new THREE.ConeGeometry(0.5, 1.5, 4);
-const crenelGeometry = new THREE.ConeGeometry(0.5, 0.75, 4);
+const coneGeo = new THREE.ConeGeometry(0.5, 1.5, 4);
+const upsideDownConeGeo = new THREE.ConeGeometry(0.5, 0.75, 4);
 
 for (let i = 0; i < 8; i++) {
-  // Merlon (higher section)
-  const merlon = new THREE.Mesh(merlonGeometry, battlementMaterial);
-  merlon.rotation.y = Math.PI * 0.25;
-  merlon.position.y = 6.75;
-  merlon.position.x = Math.sin((Math.PI / 4) * i) * 7;
-  merlon.position.z = Math.cos((Math.PI / 4) * i) * 7;
-  house.add(merlon);
-  battlements.push(merlon); // add merlon to array
+  const cone = new THREE.Mesh(coneGeo, battlementMaterial);
+  cone.rotation.y = Math.PI * 0.25;
+  cone.position.y = 6.75;
+  cone.position.x = Math.sin((Math.PI / 4) * i) * 7;
+  cone.position.z = Math.cos((Math.PI / 4) * i) * 7;
+  house.add(cone);
+  battlements.push(cone);
 
-  // Add a point light to the merlon
   const pointLight = new THREE.PointLight(0xffaa00, 1, 10);
   pointLight.position.set(
-    merlon.position.x,
-    merlon.position.y + 0.75,
-    merlon.position.z
+    cone.position.x,
+    cone.position.y + 0.75,
+    cone.position.z
   );
   scene.add(pointLight);
 
-  // Crenel (lower section)
-  const crenel = new THREE.Mesh(crenelGeometry, battlementMaterial);
-  crenel.rotation.x = Math.PI;
-  crenel.position.y = 6.375;
-  crenel.position.x = Math.sin((Math.PI / 4) * i + Math.PI / 8) * 7;
-  crenel.position.z = Math.cos((Math.PI / 4) * i + Math.PI / 8) * 7;
-  house.add(crenel);
-  battlements.push(crenel); // add crenel to array
+  const upsideDownCone = new THREE.Mesh(upsideDownConeGeo, battlementMaterial);
+  upsideDownCone.rotation.x = Math.PI;
+  upsideDownCone.position.y = 6.375;
+  upsideDownCone.position.x = Math.sin((Math.PI / 4) * i + Math.PI / 8) * 7;
+  upsideDownCone.position.z = Math.cos((Math.PI / 4) * i + Math.PI / 8) * 7;
+  house.add(upsideDownCone);
+  battlements.push(upsideDownCone);
 }
 
 // Door
@@ -329,7 +326,7 @@ const clock = new THREE.Clock();
 const tick = () => {
   const elapsedTime = clock.getElapsedTime();
 
-  // Orbit and spin each merlon and crenel
+  // Orbit and spin
   for (let i = 0; i < battlements.length; i++) {
     const battlement = battlements[i];
     const orbitRadius = 7 + (i % 2) * 0.5; // alternate between two radii for merlons and crenels

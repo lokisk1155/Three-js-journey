@@ -108,6 +108,46 @@ roof.rotation.y = Math.PI * 0.25;
 roof.position.y = 5.5;
 house.add(roof);
 
+// Define the material using the brick texture
+const battlementMaterial = new THREE.MeshStandardMaterial({
+  map: bricksColorTexture,
+  aoMap: bricksAmbientOcclusionTexture,
+  normalMap: bricksNormalTexture,
+  roughnessMap: bricksRoughnessTexture,
+});
+
+const battlements = [];
+
+// Crenellations
+const coneGeo = new THREE.ConeGeometry(0.5, 1.5, 4);
+const upsideDownConeGeo = new THREE.ConeGeometry(0.5, 0.75, 4);
+
+for (let i = 0; i < 8; i++) {
+  const cone = new THREE.Mesh(coneGeo, battlementMaterial);
+  cone.rotation.y = Math.PI * 0.25;
+  cone.position.y = 6.75;
+  cone.position.x = Math.sin((Math.PI / 4) * i) * 7;
+  cone.position.z = Math.cos((Math.PI / 4) * i) * 7;
+  house.add(cone);
+  battlements.push(cone);
+
+  const pointLight = new THREE.PointLight(0xffaa00, 1, 10);
+  pointLight.position.set(
+    cone.position.x,
+    cone.position.y + 0.75,
+    cone.position.z
+  );
+  scene.add(pointLight);
+
+  const upsideDownCone = new THREE.Mesh(upsideDownConeGeo, battlementMaterial);
+  upsideDownCone.rotation.x = Math.PI;
+  upsideDownCone.position.y = 6.375;
+  upsideDownCone.position.x = Math.sin((Math.PI / 4) * i + Math.PI / 8) * 7;
+  upsideDownCone.position.z = Math.cos((Math.PI / 4) * i + Math.PI / 8) * 7;
+  house.add(upsideDownCone);
+  battlements.push(upsideDownCone);
+}
+
 // Door
 const door = new THREE.Mesh(
   new THREE.PlaneGeometry(2.2, 2.2, 100, 100),
@@ -300,6 +340,19 @@ const clock = new THREE.Clock();
 
 const tick = () => {
   const elapsedTime = clock.getElapsedTime();
+
+  // Orbit and spin
+  for (let i = 0; i < battlements.length; i++) {
+    const battlement = battlements[i];
+    const orbitRadius = 7 + (i % 2) * 0.5; // alternate between two radii for merlons and crenels
+    const speed = 0.05; // same speed for all battlements
+    const phaseShift = (Math.PI * 2 * i) / battlements.length; // different starting point for each battlement
+    const angle = elapsedTime * speed + phaseShift;
+
+    battlement.rotation.y += 0.01; // spin on own axis
+    battlement.position.x = Math.sin(angle) * orbitRadius; // orbit house
+    battlement.position.z = Math.cos(angle) * orbitRadius;
+  }
 
   // Ghosts
   const ghost1Angle = elapsedTime * 0.5;
